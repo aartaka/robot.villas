@@ -9,7 +9,7 @@ updates:
     groups:
       fedify:
         patterns:
-          - "@fedify/*"
+          - '@fedify/*'
   - package-ecosystem: docker
     directory: /
     open-pull-requests-limit: 10
