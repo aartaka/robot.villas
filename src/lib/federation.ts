@@ -19,6 +19,7 @@ import {
   EmojiReact,
   Endpoints,
   Follow,
+  Hashtag,
   Image,
   Like,
   Note,
@@ -60,6 +61,7 @@ import {
   upsertRelay,
   type Db,
 } from "./db";
+import { hashtagsForNoteBody } from "./hashtags";
 import { buildCreateActivity, formatContent, safeParseUrl } from "./publisher";
 
 export interface FederationDeps {
@@ -333,7 +335,12 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
             buildCreateActivity(
               identifier,
               e.id,
-              { title: e.title, link: e.url, publishedAt: e.publishedAt },
+              {
+                title: e.title,
+                link: e.url,
+                publishedAt: e.publishedAt,
+                hashtags: hashtagsForNoteBody(e.hashtags),
+              },
               ctx.url,
             ),
           ),
@@ -384,7 +391,22 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
       if (!entry) {
         return null;
       }
-      const content = formatContent({ title: entry.title, link: entry.url, publishedAt: entry.publishedAt });
+      const hashtags = hashtagsForNoteBody(entry.hashtags);
+      const content = formatContent({
+        title: entry.title,
+        link: entry.url,
+        publishedAt: entry.publishedAt,
+        hashtags,
+      });
+      const hashtagTags = hashtags
+        .filter(Boolean)
+        .map(
+          (h) =>
+            new Hashtag({
+              href: new URL(`/tags/${encodeURIComponent(h)}`, ctx.url),
+              name: `#${h}`,
+            }),
+        );
       return new Note({
         id: ctx.getObjectUri(Note, values),
         attribution: ctx.getActorUri(identifier),
@@ -396,6 +418,7 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
         published: entry.publishedAt
           ? Temporal.Instant.from(entry.publishedAt.toISOString())
           : undefined,
+        tags: hashtagTags,
       });
     },
   );

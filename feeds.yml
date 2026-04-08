@@ -264,5 +264,9 @@ bots:
     profile_photo: https://static01.nyt.com/images/icons/ios-default-homescreen-57x57.png
 follows:
   - '@icco@merveilles.town'
+  - '@_followback@tags.pub'
 relays:
   - https://relay.toot.io/actor
+  - https://relay.minecloud.ro/actor
+  - https://relay.intahnet.co.uk/actor
+  - https://tags.pub/user/_____relay_____

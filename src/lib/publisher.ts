@@ -1,9 +1,11 @@
 import { Temporal } from "@js-temporal/polyfill";
 import type { Context } from "@fedify/fedify";
-import { Create, Note, PUBLIC_COLLECTION, type Recipient } from "@fedify/vocab";
+import { Create, Hashtag, Note, PUBLIC_COLLECTION, type Recipient } from "@fedify/vocab";
 import escapeHtml from "escape-html";
 import { getLogger } from "@logtape/logtape";
-import { getAcceptedRelays, getFollowerRecipients, insertEntry, type Db } from "./db";
+import type { BotConfig } from "./config";
+import { getAcceptedRelays, getFollowerRecipients, hasEntry, insertEntry, type Db } from "./db";
+import { resolveHashtags } from "./hashtags";
 import type { FeedEntry } from "./rss";
 
 const logger = getLogger(["robot-villas", "publisher"]);
@@ -23,6 +25,8 @@ export interface EntryLike {
   title: string;
   link: string;
   publishedAt: Date | null;
+  /** Hashtag labels (no leading #), at most three. */
+  hashtags: string[];
 }
 
 /**
@@ -39,6 +43,16 @@ export function buildCreateActivity(
   const actorId = new URL(`/users/${botUsername}`, baseUrl);
   const followersId = new URL(`/users/${botUsername}/followers`, baseUrl);
 
+  const hashtagTags = entry.hashtags
+    .filter(Boolean)
+    .map(
+      (h) =>
+        new Hashtag({
+          href: new URL(`/tags/${encodeURIComponent(h)}`, baseUrl),
+          name: `#${h}`,
+        }),
+    );
+
   const note = new Note({
     id: noteId,
     attribution: actorId,
@@ -50,6 +64,7 @@ export function buildCreateActivity(
     published: entry.publishedAt
       ? Temporal.Instant.from(entry.publishedAt.toISOString())
       : undefined,
+    tags: hashtagTags,
   });
 
   return new Create({
@@ -72,6 +87,7 @@ export async function publishNewEntries(
   botUsername: string,
   domain: string,
   entries: FeedEntry[],
+  bot: BotConfig,
 ): Promise<PublishResult> {
   let published = 0;
   let skipped = 0;
@@ -100,6 +116,17 @@ export async function publishNewEntries(
     const url = truncateToMax(entry.link, MAX_URL_LENGTH);
     const title = truncateToMax(entry.title, MAX_TITLE_LENGTH);
 
+    if (await hasEntry(db, botUsername, guid)) {
+      skipped++;
+      continue;
+    }
+
+    const hashtags = await resolveHashtags(
+      { ...entry, title, link: url },
+      botUsername,
+      bot,
+    );
+
     const entryId = await insertEntry(
       db,
       botUsername,
@@ -107,6 +134,7 @@ export async function publishNewEntries(
       url,
       title,
       entry.publishedAt,
+      [...hashtags],
     );
 
     if (entryId === null) {
@@ -122,7 +150,7 @@ export async function publishNewEntries(
     const create = buildCreateActivity(
       botUsername,
       entryId,
-      { title, link: url, publishedAt: entry.publishedAt },
+      { title, link: url, publishedAt: entry.publishedAt, hashtags },
       `https://${domain}`,
     );
 
@@ -179,9 +207,12 @@ export function safeParseUrl(link: string | undefined): URL | undefined {
 
 export function formatContent(entry: EntryLike): string {
   const safeUrl = safeParseUrl(entry.link);
+  const tags = entry.hashtags.filter(Boolean);
+  const tagsHtml =
+    tags.length > 0 ? `<p>${tags.map((h) => `#${escapeHtml(h)}`).join(" ")}</p>` : "";
   if (safeUrl) {
     const href = safeUrl.href;
-    return `<p>${escapeHtml(entry.title)}</p><p><a href="${escapeHtml(href)}">${escapeHtml(href)}</a></p>`;
+    return `<p>${escapeHtml(entry.title)}</p><p><a href="${escapeHtml(href)}">${escapeHtml(href)}</a></p>${tagsHtml}`;
   }
-  return `<p>${escapeHtml(entry.title)}</p>`;
+  return `<p>${escapeHtml(entry.title)}</p>${tagsHtml}`;
 }

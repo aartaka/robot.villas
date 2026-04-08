@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { integer, jsonb, pgEnum, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 
 export const feedEntries = pgTable(
@@ -12,6 +13,8 @@ export const feedEntries = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull().defaultNow(),
     likeCount: integer("like_count").notNull().default(0),
     boostCount: integer("boost_count").notNull().default(0),
+    /** Stored hashtag labels (no leading #), typically 0–3. Legacy rows may be []. */
+    hashtags: jsonb("hashtags").$type<string[]>().notNull().default(sql`'[]'::jsonb`),
     deletedAt: timestamp("deleted_at", { withTimezone: true, mode: "date" }),
   },
   (t) => [unique().on(t.botUsername, t.guid)],
