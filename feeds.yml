@@ -82,7 +82,7 @@ bots:
     feed_url: https://buttondown.email/cassidoo/rss
     display_name: Cassidy Williams
     summary: rendezvous with cassidoo, a newsletter by Cassidy Williams.
-    profile_photo: https://avatars.githubusercontent.com/u/1454403?s=200
+    profile_photo: https://assets.buttondown.email/images/d40c16f2-c6ab-4a4f-b37f-e8e145580003.png
   julia_evans:
     feed_url: https://jvns.ca/atom.xml
     display_name: Julia Evans
