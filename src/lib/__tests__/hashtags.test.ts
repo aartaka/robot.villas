@@ -1,4 +1,13 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
+
+vi.mock("@google/genai", () => ({
+  GoogleGenAI: class {
+    models = {
+      generateContent: vi.fn().mockRejectedValue(new Error("mock: no real API calls in tests")),
+    };
+  },
+}));
+
 import {
   hashtagsForNoteBody,
   mergeHashtagCandidates,
@@ -51,11 +60,17 @@ describe("normalizeHashtagLabel", () => {
 });
 
 describe("resolveHashtags", () => {
+  beforeEach(() => {
+    // Ensure no Gemini env vars bleed in from the environment unless a test sets them.
+    vi.stubEnv("GEMINI_API_KEY", "");
+    vi.stubEnv("GEMINI_PROJECT", "");
+  });
+
   afterEach(() => {
     vi.unstubAllEnvs();
   });
 
-  it("takes first three distinct feed categories", async () => {
+  it("falls back to feed categories when Gemini is not configured", async () => {
     const tags = await resolveHashtags(
       makeEntry({
         title: "T",
@@ -68,7 +83,7 @@ describe("resolveHashtags", () => {
     expect(tags).toEqual(["rust", "lang", "systems"]);
   });
 
-  it("uses only default_hashtags when feed has no categories", async () => {
+  it("falls back to default_hashtags when feed has no categories and Gemini is not configured", async () => {
     const tags = await resolveHashtags(makeEntry({ title: "Hello world today" }), "nyt_world", {
       ...baseBot,
       default_hashtags: ["World", "News"],
@@ -77,7 +92,6 @@ describe("resolveHashtags", () => {
   });
 
   it("returns empty when no categories, defaults, or Gemini", async () => {
-    vi.stubEnv("GEMINI_API_KEY", "");
     const tags = await resolveHashtags(
       makeEntry({ title: "The quick brown fox", link: "https://example.com/x", feedCategories: [] }),
       "danluu",
@@ -85,5 +99,23 @@ describe("resolveHashtags", () => {
       { geminiApiKey: "" },
     );
     expect(tags).toEqual([]);
+  });
+
+  it("seeds pool from default_hashtags only (not categories) when Gemini is configured", async () => {
+    // Gemini is "configured" but we expect it to fail; the pool should only contain defaults,
+    // proving categories were not added directly.
+    const tags = await resolveHashtags(
+      makeEntry({
+        title: "T",
+        feedCategories: ["ShouldNotAppear", "AlsoNot"],
+      }),
+      "my_bot",
+      { ...baseBot, default_hashtags: ["DefaultTag"] },
+      { geminiApiKey: "fake-key-that-will-fail" },
+    );
+    // Gemini call will throw; we fall back to whatever is in the pool (defaults only).
+    expect(tags).not.toContain("ShouldNotAppear");
+    expect(tags).not.toContain("AlsoNot");
+    expect(tags).toContain("DefaultTag");
   });
 });
