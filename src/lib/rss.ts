@@ -61,14 +61,6 @@ export async function fetchFeedWithHttpResult(feedUrl: string): Promise<FeedFetc
   }
 }
 
-export async function fetchFeed(feedUrl: string): Promise<FeedEntry[]> {
-  const { entries, errorMessage } = await fetchFeedWithHttpResult(feedUrl);
-  if (errorMessage) {
-    throw new Error(errorMessage);
-  }
-  return entries;
-}
-
 export async function parseFeedXml(xml: string): Promise<FeedEntry[]> {
   const feed = await parser.parseString(xml);
   const items = feed.items.map(normalizeFeedItem);

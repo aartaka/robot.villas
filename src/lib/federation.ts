@@ -396,12 +396,15 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
         return null;
       }
       const hashtags = hashtagsForNoteBody(entry.hashtags);
-      const content = formatContent({
-        title: entry.title,
-        link: entry.url,
-        publishedAt: entry.publishedAt,
-        hashtags,
-      });
+      const content = formatContent(
+        {
+          title: entry.title,
+          link: entry.url,
+          publishedAt: entry.publishedAt,
+          hashtags,
+        },
+        ctx.url,
+      );
       const hashtagTags = hashtags
         .filter(Boolean)
         .map(
