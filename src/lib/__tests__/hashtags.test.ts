@@ -1,10 +1,17 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 
+const mockGenerateContent = vi.fn().mockRejectedValue(new Error("mock: no real API calls in tests"));
+
 vi.mock("@google/genai", () => ({
   GoogleGenAI: class {
     models = {
-      generateContent: vi.fn().mockRejectedValue(new Error("mock: no real API calls in tests")),
+      generateContent: mockGenerateContent,
     };
+  },
+  Type: {
+    OBJECT: "OBJECT",
+    ARRAY: "ARRAY",
+    STRING: "STRING",
   },
 }));
 
@@ -102,6 +109,7 @@ describe("resolveHashtags", () => {
   });
 
   it("seeds pool from default_hashtags only (not categories) when Gemini is configured", async () => {
+    mockGenerateContent.mockClear();
     // Gemini is "configured" but we expect it to fail; the pool should only contain defaults,
     // proving categories were not added directly.
     const tags = await resolveHashtags(
@@ -114,6 +122,7 @@ describe("resolveHashtags", () => {
       { geminiApiKey: "fake-key-that-will-fail" },
     );
     // Gemini call will throw; we fall back to whatever is in the pool (defaults only).
+    expect(mockGenerateContent).toHaveBeenCalledOnce();
     expect(tags).not.toContain("ShouldNotAppear");
     expect(tags).not.toContain("AlsoNot");
     expect(tags).toContain("DefaultTag");
