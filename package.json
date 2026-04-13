@@ -40,6 +40,9 @@
     "tailwindcss": "^4",
     "zod": "^4.3.6"
   },
+  "resolutions": {
+    "esbuild": "^0.25.0"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^15.5.12",
