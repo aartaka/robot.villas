@@ -25,9 +25,15 @@ export async function register() {
     followAccounts,
     sendProfileUpdates,
     sendDeletedBotActivities,
+    repairFollowerInboxes,
   } = await import("@/lib/federation");
 
   const fedCtx = federation.createContext(new URL(`https://${domain}`));
+  const botUsernames = Object.keys(config.bots);
+
+  repairFollowerInboxes(fedCtx, db, botUsernames).catch((err) => {
+    logger.error("Follower inbox repair failed: {error}", { error: err });
+  });
 
   subscribeToRelays(fedCtx, db, config).catch((err) => {
     logger.error("Relay subscription failed: {error}", { error: err });

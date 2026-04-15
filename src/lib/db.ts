@@ -106,6 +106,20 @@ export async function removeFollower(db: Db, botUsername: string, followerId: st
     .where(and(eq(schema.followers.botUsername, botUsername), eq(schema.followers.followerId, followerId), isNull(schema.followers.deletedAt)));
 }
 
+export async function getFollowersWithNullInbox(db: Db): Promise<{ followerId: string }[]> {
+  return db
+    .selectDistinct({ followerId: schema.followers.followerId })
+    .from(schema.followers)
+    .where(and(isNull(schema.followers.sharedInboxUrl), isNull(schema.followers.deletedAt)));
+}
+
+export async function updateFollowerInboxUrl(db: Db, followerId: string, sharedInboxUrl: string): Promise<void> {
+  await db
+    .update(schema.followers)
+    .set({ sharedInboxUrl })
+    .where(and(eq(schema.followers.followerId, followerId), isNull(schema.followers.deletedAt)));
+}
+
 export async function removeFollowerFromAll(db: Db, followerId: string): Promise<number> {
   const rows = await db
     .update(schema.followers)

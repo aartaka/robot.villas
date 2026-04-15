@@ -45,6 +45,7 @@ import {
   getEntriesPage,
   getEntryById,
   getFollowerRecipients,
+  getFollowersWithNullInbox,
   getAcceptedFollowingActorIds,
   getFollowers,
   getFollowingByActivityId,
@@ -58,6 +59,7 @@ import {
   removeFollowerFromAll,
   removeKeypairs,
   saveKeypairs,
+  updateFollowerInboxUrl,
   updateFollowingStatus,
   updateRelayStatus,
   upsertFollowing,
@@ -702,9 +704,46 @@ export async function followAccounts(
 }
 
 /**
+ * Finds followers stored without a sharedInboxUrl (e.g. rows written before
+ * the column existed) and re-resolves their actor to backfill the inbox URL.
+ * Without this, publisher.ts silently skips delivering posts to them.
+ */
+export async function repairFollowerInboxes(
+  ctx: Context<void>,
+  db: Db,
+  botUsernames: string[],
+): Promise<void> {
+  const nullInboxFollowers = await getFollowersWithNullInbox(db);
+  if (nullInboxFollowers.length === 0) {
+    return;
+  }
+  const signingIdentifier = botUsernames[0];
+  const documentLoader = await ctx.getDocumentLoader({ identifier: signingIdentifier });
+  for (const { followerId } of nullInboxFollowers) {
+    try {
+      const actor = await ctx.lookupObject(followerId, { documentLoader });
+      if (!actor || !("id" in actor)) {
+        logger.warn("repairFollowerInboxes: could not resolve actor {followerId}", { followerId });
+        continue;
+      }
+      const resolved = actor as { id: URL; endpoints?: { sharedInbox?: URL }; inboxId?: URL };
+      const inboxUrl = resolved.endpoints?.sharedInbox?.href ?? resolved.inboxId?.href;
+      if (!inboxUrl) {
+        logger.warn("repairFollowerInboxes: actor {followerId} has no inbox URL", { followerId });
+        continue;
+      }
+      await updateFollowerInboxUrl(db, followerId, inboxUrl);
+      logger.info("repairFollowerInboxes: set inbox URL for {followerId} to {inboxUrl}", { followerId, inboxUrl });
+    } catch (error) {
+      logger.warn("repairFollowerInboxes: failed for {followerId}: {error}", { followerId, error });
+    }
+  }
+}
+
+/**
  * Subscribes to configured relays by sending Follow activities from every
- * bot actor. Skips individual (bot, relay) pairs that already have a
- * pending or accepted subscription.
+ * bot actor. Skips pairs that are already accepted or explicitly rejected;
+ * retries pairs still pending (Follow sent but no Accept received).
  */
 export async function subscribeToRelays(
   ctx: Context<void>,
@@ -722,7 +761,13 @@ export async function subscribeToRelays(
   }
 
   const existingRelays = await getAllRelays(db);
-  const existingSet = new Set(existingRelays.map((r) => `${r.botUsername}:${r.url}`));
+  // Only skip relays that are already accepted or explicitly rejected.
+  // Pending subscriptions (Follow sent but no Accept received) are retried.
+  const skipSet = new Set(
+    existingRelays
+      .filter((r) => r.status === "accepted" || r.status === "rejected")
+      .map((r) => `${r.botUsername}:${r.url}`),
+  );
 
   // Resolve each relay actor once (shared across all bots).
   const signingIdentifier = botUsernames[0];
@@ -750,7 +795,7 @@ export async function subscribeToRelays(
 
   for (const botUsername of botUsernames) {
     for (const { relayUrl, recipient } of resolvedRelays) {
-      if (existingSet.has(`${botUsername}:${relayUrl}`)) {
+      if (skipSet.has(`${botUsername}:${relayUrl}`)) {
         logger.info("Bot {bot} already subscribed to relay {url}, skipping", {
           bot: botUsername,
           url: relayUrl,
