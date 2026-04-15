@@ -71,12 +71,28 @@ export function mergeHashtagCandidates(rawStrings: string[], max = MAX_TAGS): st
   return pool.slice(0, max);
 }
 
-function parseGeminiTagsJson(text: string): string[] {
-  const data = JSON.parse(text) as { tags?: unknown };
+function parseTagsObject(raw: string): string[] {
+  const data = JSON.parse(raw) as { tags?: unknown };
   if (!Array.isArray(data.tags)) {
     throw new Error("missing tags array in Gemini response");
   }
   return data.tags.filter((x): x is string => typeof x === "string");
+}
+
+function parseGeminiTagsJson(text: string): string[] {
+  const trim = text.trim();
+  // 1. Try raw
+  try {
+    return parseTagsObject(trim);
+  } catch (e) {
+    logger.debug("parseGeminiTagsJson: raw parse failed, trying object extract: {error}", { error: e });
+  }
+  // 2. Extract first {...} block (handles "Here is the JSON: {...}" prose prefix)
+  const match = trim.match(/\{[\s\S]*\}/);
+  if (match) {
+    return parseTagsObject(match[0]);
+  }
+  throw new Error(`no JSON object found in Gemini response: ${trim.slice(0, 100)}`);
 }
 
 async function geminiSuggestMissingTags(params: {
