@@ -41,7 +41,7 @@
     "zod": "^4.3.6"
   },
   "resolutions": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.28.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
