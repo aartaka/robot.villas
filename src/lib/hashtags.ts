@@ -8,7 +8,7 @@ const logger = getLogger(["robot-villas", "hashtags"]);
 /** Max hashtags per note (stored and rendered). */
 export const MAX_TAGS = 3;
 const MAX_TAG_LEN = 30;
-const GEMINI_DEFAULT_MODEL = "gemini-3-flash-preview";
+const GEMINI_DEFAULT_MODEL = "gemini-2.5-flash-lite";
 
 /**
  * Normalizes a candidate label to a Mastodon-safe hashtag token (no leading #).
