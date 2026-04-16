@@ -472,6 +472,23 @@ export async function upsertRelay(
     });
 }
 
+export async function getRelayByActivityId(db: Db, followActivityId: string): Promise<RelayRow | null> {
+  const rows = await db
+    .select({
+      id: schema.relays.id,
+      botUsername: schema.relays.botUsername,
+      url: schema.relays.url,
+      inboxUrl: schema.relays.inboxUrl,
+      actorId: schema.relays.actorId,
+      status: schema.relays.status,
+      followActivityId: schema.relays.followActivityId,
+    })
+    .from(schema.relays)
+    .where(and(eq(schema.relays.followActivityId, followActivityId), isNull(schema.relays.deletedAt)))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
 export async function updateRelayStatus(
   db: Db,
   followActivityId: string,

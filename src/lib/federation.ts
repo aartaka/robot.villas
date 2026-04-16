@@ -49,6 +49,7 @@ import {
   getAcceptedFollowingActorIds,
   getFollowers,
   getFollowingByActivityId,
+  getRelayByActivityId,
   getKeypairs,
   incrementBoostCount,
   incrementLikeCount,
@@ -442,15 +443,25 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
         return null;
       }
       const followUri = ctx.getObjectUri(Follow, values);
-      const row = await getFollowingByActivityId(db, followUri.href);
-      if (!row || !row.targetActorId) {
-        return null;
+      // Check the following table (accounts the bot follows, e.g. _followback@tags.pub)
+      const followingRow = await getFollowingByActivityId(db, followUri.href);
+      if (followingRow?.targetActorId) {
+        return new Follow({
+          id: followUri,
+          actor: ctx.getActorUri(identifier),
+          object: new URL(followingRow.targetActorId),
+        });
       }
-      return new Follow({
-        id: followUri,
-        actor: ctx.getActorUri(identifier),
-        object: new URL(row.targetActorId),
-      });
+      // Also check the relays table (relay subscriptions)
+      const relayRow = await getRelayByActivityId(db, followUri.href);
+      if (relayRow?.actorId) {
+        return new Follow({
+          id: followUri,
+          actor: ctx.getActorUri(identifier),
+          object: new URL(relayRow.actorId),
+        });
+      }
+      return null;
     },
   );
 
@@ -804,10 +815,10 @@ export async function subscribeToRelays(
       }
 
       try {
-        const followId = new URL(
-          `/relay-follows/${crypto.randomUUID()}`,
-          ctx.getActorUri(botUsername),
-        );
+        const followId = ctx.getObjectUri(Follow, {
+          identifier: botUsername,
+          id: crypto.randomUUID(),
+        });
 
         const follow = new Follow({
           id: followId,
