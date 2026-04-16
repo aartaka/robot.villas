@@ -348,7 +348,7 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
                 publishedAt: e.publishedAt,
                 hashtags: hashtagsForNoteBody(e.hashtags),
               },
-              ctx.url,
+              origin,
             ),
           ),
           prevCursor: offset > 0 ? String(Math.max(0, offset - OUTBOX_PAGE_SIZE)) : null,
@@ -406,14 +406,14 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
           publishedAt: entry.publishedAt,
           hashtags,
         },
-        ctx.url,
+        origin,
       );
       const hashtagTags = hashtags
         .filter(Boolean)
         .map(
           (h) =>
             new Hashtag({
-              href: new URL(`/tags/${encodeURIComponent(h)}`, ctx.url),
+              href: new URL(`/tags/${encodeURIComponent(h)}`, origin),
               name: `#${h}`,
             }),
         );
