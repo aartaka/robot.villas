@@ -413,7 +413,7 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
         .map(
           (h) =>
             new Hashtag({
-              href: new URL(`/tags/${encodeURIComponent(h)}`, origin),
+              href: new URL(`/tags/${encodeURIComponent(h.toLowerCase())}`, origin),
               name: `#${h}`,
             }),
         );

@@ -48,7 +48,7 @@ export function buildCreateActivity(
     .map(
       (h) =>
         new Hashtag({
-          href: new URL(`/tags/${encodeURIComponent(h)}`, baseUrl),
+          href: new URL(`/tags/${encodeURIComponent(h.toLowerCase())}`, baseUrl),
           name: `#${h}`,
         }),
     );
@@ -214,7 +214,7 @@ export function formatContent(entry: EntryLike, baseUrl?: string | URL): string 
           .map((h) => {
             const escaped = escapeHtml(h);
             if (baseUrl) {
-              const tagHref = new URL(`/tags/${encodeURIComponent(h)}`, baseUrl).href;
+              const tagHref = new URL(`/tags/${encodeURIComponent(h.toLowerCase())}`, baseUrl).href;
               return `<a href="${escapeHtml(tagHref)}" class="mention hashtag" rel="tag">#<span>${escaped}</span></a>`;
             }
             return `#${escaped}`;

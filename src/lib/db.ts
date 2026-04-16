@@ -217,6 +217,62 @@ export async function getEntriesPage(
     .offset(offset);
 }
 
+const TAG_ENTRY_FIELDS = {
+  id: schema.feedEntries.id,
+  botUsername: schema.feedEntries.botUsername,
+  url: schema.feedEntries.url,
+  title: schema.feedEntries.title,
+  publishedAt: schema.feedEntries.publishedAt,
+  likeCount: schema.feedEntries.likeCount,
+  boostCount: schema.feedEntries.boostCount,
+  hashtags: schema.feedEntries.hashtags,
+};
+
+/**
+ * Case-insensitive tag match using a JSONB array-element scan.
+ * Normalises both stored tags and the query to lower-case so
+ * "#Synthesizers" and "#synthesizers" resolve to the same page.
+ */
+function tagFilter(tag: string) {
+  return sql`EXISTS (
+    SELECT 1
+    FROM jsonb_array_elements_text(${schema.feedEntries.hashtags}) AS t(v)
+    WHERE lower(t.v) = lower(${tag})
+  )`;
+}
+
+export async function getEntriesByTag(
+  db: Db,
+  tag: string,
+  limit: number,
+  offset: number,
+): Promise<Array<{
+  id: number;
+  botUsername: string;
+  url: string;
+  title: string;
+  publishedAt: Date | null;
+  likeCount: number;
+  boostCount: number;
+  hashtags: string[];
+}>> {
+  return db
+    .select(TAG_ENTRY_FIELDS)
+    .from(schema.feedEntries)
+    .where(and(tagFilter(tag), isNull(schema.feedEntries.deletedAt)))
+    .orderBy(desc(schema.feedEntries.publishedAt))
+    .limit(limit)
+    .offset(offset);
+}
+
+export async function countEntriesByTag(db: Db, tag: string): Promise<number> {
+  const rows = await db
+    .select({ value: count() })
+    .from(schema.feedEntries)
+    .where(and(tagFilter(tag), isNull(schema.feedEntries.deletedAt)));
+  return rows[0]?.value ?? 0;
+}
+
 /**
  * Returns stored key pairs for a bot. Handles both the legacy single-JWK
  * format and the new array-of-JWKs format (for dual RSA + Ed25519 keys).
