@@ -353,9 +353,9 @@ describe("formatContent", () => {
       },
       "https://robot.villas",
     );
-    expect(content).toContain('<a href="https://robot.villas/tags/One" class="mention hashtag" rel="tag">#<span>One</span></a>');
-    expect(content).toContain('<a href="https://robot.villas/tags/Two" class="mention hashtag" rel="tag">#<span>Two</span></a>');
-    expect(content).toContain('<a href="https://robot.villas/tags/Three" class="mention hashtag" rel="tag">#<span>Three</span></a>');
+    expect(content).toContain('<a href="https://robot.villas/tags/one" class="mention hashtag" rel="tag">#<span>One</span></a>');
+    expect(content).toContain('<a href="https://robot.villas/tags/two" class="mention hashtag" rel="tag">#<span>Two</span></a>');
+    expect(content).toContain('<a href="https://robot.villas/tags/three" class="mention hashtag" rel="tag">#<span>Three</span></a>');
   });
 
   it("omits link for unsafe url schemes", () => {
