@@ -159,6 +159,11 @@ bots:
     display_name: Nelson Elhage
     summary: Blog posts on systems, compilers, and performance.
     profile_photo: https://avatars.githubusercontent.com/u/16725?s=200
+  import_ai:
+    feed_url: https://importai.substack.com/feed
+    display_name: Import AI
+    summary: A weekly newsletter about artificial intelligence based on detailed analysis of cutting-edge research, by Jack Clark.
+    profile_photo: https://substack-post-media.s3.amazonaws.com/public/images/8cc1c9c9-fc87-4eeb-ad15-7dc989b77553_528x504.png
   simon_willison:
     feed_url: https://simonwillison.net/atom/everything/
     display_name: Simon Willison
