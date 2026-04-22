@@ -274,6 +274,11 @@ bots:
     display_name: NYT > Food
     summary: Food and dining news from The New York Times.
     profile_photo: https://static01.nyt.com/images/icons/ios-default-homescreen-57x57.png
+  hell_gate:
+    feed_url: https://hellgatenyc.com/all-posts/rss/
+    display_name: Hell Gate
+    summary: Subscriber-funded, worker-owned news outlet about New York City.
+    profile_photo: https://hellgatenyc.com/assets/svg/logo-standard.svg
 follows:
   - '@icco@merveilles.town'
   - '@_followback@tags.pub'
