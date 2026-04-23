@@ -53,22 +53,29 @@ export function PostFeed({
           key={e.id}
           className="flex items-baseline justify-between gap-4 py-2"
         >
-          <span className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-            {showBotHandle && (
-              <Link
-                href={`/@${e.botUsername}`}
-                className="shrink-0 font-mono text-xs text-base-content/50"
-              >
-                @{e.botUsername}
-              </Link>
-            )}
-            {e.url ? (
-              <a href={e.url} className="link link-hover font-medium">
-                {e.title}
-              </a>
-            ) : (
-              <span className="font-medium">{e.title}</span>
-            )}
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex min-w-0 items-baseline gap-x-3">
+              {showBotHandle && (
+                <Link
+                  href={`/@${e.botUsername}`}
+                  className="shrink-0 font-mono text-xs text-base-content/50"
+                >
+                  @{e.botUsername}
+                </Link>
+              )}
+              {e.url ? (
+                <a
+                  href={e.url}
+                  className="link link-hover min-w-0 flex-1 break-words font-medium"
+                >
+                  {e.title}
+                </a>
+              ) : (
+                <span className="min-w-0 flex-1 break-words font-medium">
+                  {e.title}
+                </span>
+              )}
+            </div>
             {e.hashtags.length > 0 && (
               <span className="flex flex-wrap gap-1">
                 {e.hashtags.map((t) => (
@@ -86,7 +93,7 @@ export function PostFeed({
                 ))}
               </span>
             )}
-          </span>
+          </div>
           <span className="flex shrink-0 items-center gap-1">
             <EntryInteractButtons
               activityUri={entryObjectUrl(domain, e.botUsername, e.id)}
