@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  decodeHtmlEntities,
   extractFeedCategories,
   fetchFeedWithHttpResult,
   MAX_ITEMS_PER_POLL,
+  normalizeTypography,
   parseFeedXml,
   type FeedEntry,
 } from "../rss";
@@ -114,6 +116,88 @@ describe("parseFeedXml", () => {
     expect(entries).toHaveLength(MAX_ITEMS_PER_POLL);
     expect(entries[0]?.title).toBe("Item 0");
     expect(entries[MAX_ITEMS_PER_POLL - 1]?.title).toBe(`Item ${MAX_ITEMS_PER_POLL - 1}`);
+  });
+
+  it("decodes HTML entities in CDATA titles and normalizes to ASCII", async () => {
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Test</title>
+    <item>
+      <title><![CDATA[Ikea&#8217;s new inflatable chair doesn&#8217;t look like an inflatable chair]]></title>
+      <link>https://example.com/ikea</link>
+      <guid>ikea-1</guid>
+    </item>
+  </channel>
+</rss>`;
+    const entries = await parseFeedXml(xml);
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.title).toBe("Ikea's new inflatable chair doesn't look like an inflatable chair");
+  });
+});
+
+describe("decodeHtmlEntities", () => {
+  it("decodes decimal numeric character references", () => {
+    expect(decodeHtmlEntities("Ikea&#8217;s")).toBe("Ikea\u2019s");
+    expect(decodeHtmlEntities("&#169; 2024")).toBe("\u00A9 2024");
+  });
+
+  it("decodes hex numeric character references", () => {
+    expect(decodeHtmlEntities("&#x2019;s")).toBe("\u2019s");
+    expect(decodeHtmlEntities("&#X2019;s")).toBe("\u2019s");
+  });
+
+  it("decodes common named entities", () => {
+    expect(decodeHtmlEntities("AT&amp;T")).toBe("AT&T");
+    expect(decodeHtmlEntities("&lt;b&gt;")).toBe("<b>");
+    expect(decodeHtmlEntities("&quot;quoted&quot;")).toBe('"quoted"');
+    expect(decodeHtmlEntities("&apos;")).toBe("'");
+    expect(decodeHtmlEntities("foo&nbsp;bar")).toBe("foo\u00A0bar");
+    expect(decodeHtmlEntities("&mdash;")).toBe("\u2014");
+    expect(decodeHtmlEntities("&hellip;")).toBe("\u2026");
+  });
+
+  it("decodes &amp; as a single pass (does not double-decode)", () => {
+    // Single pass: &amp;#8217; → &#8217; (the &amp; is decoded to &, but the
+    // resulting &#8217; is not processed again in the same call)
+    expect(decodeHtmlEntities("&amp;#8217;")).toBe("&#8217;");
+  });
+
+  it("passes through plain text unchanged", () => {
+    expect(decodeHtmlEntities("Hello world")).toBe("Hello world");
+    expect(decodeHtmlEntities("")).toBe("");
+  });
+});
+
+describe("normalizeTypography", () => {
+  it("replaces curly single quotes and apostrophes with ASCII apostrophe", () => {
+    expect(normalizeTypography("\u2018hello\u2019")).toBe("'hello'");
+    expect(normalizeTypography("Ikea\u2019s")).toBe("Ikea's");
+  });
+
+  it("replaces curly double quotes with ASCII double quote", () => {
+    expect(normalizeTypography("\u201Chello\u201D")).toBe('"hello"');
+  });
+
+  it("replaces en dash with hyphen", () => {
+    expect(normalizeTypography("2020\u20132021")).toBe("2020-2021");
+  });
+
+  it("replaces em dash with double hyphen", () => {
+    expect(normalizeTypography("foo\u2014bar")).toBe("foo--bar");
+  });
+
+  it("replaces ellipsis with three dots", () => {
+    expect(normalizeTypography("wait\u2026")).toBe("wait...");
+  });
+
+  it("replaces non-breaking space with regular space", () => {
+    expect(normalizeTypography("foo\u00A0bar")).toBe("foo bar");
+  });
+
+  it("passes through plain ASCII unchanged", () => {
+    expect(normalizeTypography("Hello, world!")).toBe("Hello, world!");
+    expect(normalizeTypography("")).toBe("");
   });
 });
 

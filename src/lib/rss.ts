@@ -2,6 +2,42 @@ import Parser from "rss-parser";
 
 const parser = new Parser({ timeout: 10_000 });
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'",
+  nbsp: "\u00A0", ndash: "\u2013", mdash: "\u2014",
+  lsquo: "\u2018", rsquo: "\u2019", ldquo: "\u201C", rdquo: "\u201D",
+  hellip: "\u2026",
+};
+
+/**
+ * Decodes HTML entities from a string in a single pass. Needed because
+ * rss-parser returns raw CDATA content without decoding HTML entities
+ * (e.g. &#8217; stays as-is). Without this, escapeHtml() double-encodes
+ * the ampersand, causing Mastodon to display raw entity strings like &#8217;.
+ */
+export function decodeHtmlEntities(str: string): string {
+  return str.replace(/&(?:#(\d+)|#x([0-9a-fA-F]+)|([a-zA-Z]+));/gi, (match, dec, hex, name) => {
+    if (dec) {
+      return String.fromCodePoint(parseInt(dec, 10));
+    }
+    if (hex) {
+      return String.fromCodePoint(parseInt(hex, 16));
+    }
+    return NAMED_ENTITIES[name.toLowerCase()] ?? match;
+  });
+}
+
+/** Replaces Unicode typographic characters with plain ASCII equivalents. */
+export function normalizeTypography(str: string): string {
+  return str
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")  // curly single quotes, apostrophes, primes
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')  // curly double quotes, double primes
+    .replace(/\u2013/g, "-")                                   // en dash
+    .replace(/\u2014/g, "--")                                  // em dash
+    .replace(/\u2026/g, "...")                                 // ellipsis
+    .replace(/\u00A0/g, " ");                                  // non-breaking space
+}
+
 const FEED_FETCH_TIMEOUT_MS = 10_000;
 
 /** Max items to process per feed per poll; limits DoS from huge feeds. */
@@ -107,7 +143,7 @@ export function extractFeedCategories(item: Parser.Item): string[] {
 function normalizeFeedItem(item: Parser.Item): FeedEntry {
   const raw = item as Record<string, unknown>;
   const guid = item.guid || (raw.id as string | undefined) || item.link || item.title || "";
-  const title = item.title || "(untitled)";
+  const title = normalizeTypography(decodeHtmlEntities(item.title || "(untitled)"));
   const link = item.link || "";
   const publishedAt = item.isoDate ? new Date(item.isoDate) : null;
   return { guid, title, link, publishedAt, feedCategories: extractFeedCategories(item) };
