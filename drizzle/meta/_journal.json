@@ -71,6 +71,13 @@
       "when": 1776030978129,
       "tag": "0009_natural_gideon",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1776969518283,
+      "tag": "0010_delete_posts_without_dates",
+      "breakpoints": true
     }
   ]
 }
