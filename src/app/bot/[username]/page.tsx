@@ -147,9 +147,13 @@ export default async function BotProfilePage({ params, searchParams }: Props) {
                 {entry.hashtags && entry.hashtags.length > 0 && (
                   <span className="flex gap-1 flex-wrap">
                     {entry.hashtags.map((tag) => (
-                      <span key={tag} className="text-xs text-primary/70 font-mono">
+                      <Link
+                        key={tag}
+                        href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
+                        className="text-xs text-primary/70 font-mono hover:text-primary"
+                      >
                         #{tag}
-                      </span>
+                      </Link>
                     ))}
                   </span>
                 )}
