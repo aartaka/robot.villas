@@ -107,8 +107,10 @@ async function buildActor(
 ): Promise<Application> {
   const keys = await ctx.getActorKeyPairs(identifier);
   const actorUri = ctx.getActorUri(identifier);
+  const profileUrl = new URL(`/@${identifier}`, actorUri);
   const enrichedSummary =
-    `<p>${escapeHtml(bot.summary)}</p>` +
+    `<p>${escapeHtml(bot.summary)} ` +
+    `<a href="${escapeHtml(profileUrl.href)}">See old posts.</a></p>` +
     `<p>I am a bot that mirrors an RSS feed. ` +
     `Source: <a href="${escapeHtml(bot.feed_url)}">${escapeHtml(bot.feed_url)}</a></p>`;
   return new Application({
