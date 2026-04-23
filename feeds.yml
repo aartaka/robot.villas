@@ -270,6 +270,7 @@ bots:
     display_name: Hell Gate
     summary: Subscriber-funded, worker-owned news outlet about New York City.
     profile_photo: https://hellgatenyc.com/assets/svg/logo-standard.svg
+relay_subscription_bot: nyt_homepage
 follows:
   - '@icco@merveilles.town'
   - '@_followback@tags.pub'

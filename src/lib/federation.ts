@@ -31,7 +31,7 @@ import {
   Update,
 } from "@fedify/vocab";
 import escapeHtml from "escape-html";
-import type { BotConfig, FeedsConfig } from "./config";
+import { getRelaySubscriptionBot, type BotConfig, type FeedsConfig } from "./config";
 import {
   addFollower,
   countEntries,
@@ -53,6 +53,7 @@ import {
   getKeypairs,
   incrementBoostCount,
   incrementLikeCount,
+  pruneRedundantRelaySubscriptions,
   removeAllEntries,
   removeAllFollowers,
   removeAllFollowing,
@@ -774,9 +775,11 @@ export async function repairFollowerInboxes(
 }
 
 /**
- * Subscribes to configured relays by sending Follow activities from every
- * bot actor. Skips pairs that are already accepted or explicitly rejected;
- * retries pairs still pending (Follow sent but no Accept received).
+ * Subscribes to configured relays with a **single** bot (see
+ * `relay_subscription_bot` in config, default: first bot). Many ActivityPub
+ * relays treat one subscription per origin instance; sending a Follow from
+ * every feed bot was causing mass Rejects. All bots still send `Create` to
+ * a relay if `getAcceptedRelays` has an accepted row.
  */
 export async function subscribeToRelays(
   ctx: Context<void>,
@@ -793,16 +796,29 @@ export async function subscribeToRelays(
     return;
   }
 
-  const existingRelays = await getAllRelays(db);
-  // Only skip relays that are already accepted or explicitly rejected.
-  // Pending subscriptions (Follow sent but no Accept received) are retried.
-  const skipSet = new Set(
-    existingRelays
-      .filter((r) => r.status === "accepted" || r.status === "rejected")
-      .map((r) => `${r.botUsername}:${r.url}`),
+  const designated = getRelaySubscriptionBot(config);
+  if (!Object.hasOwn(config.bots, designated)) {
+    logger.error("relay_subscription_bot {bot} is not a configured bot", { bot: designated });
+    return;
+  }
+
+  await pruneRedundantRelaySubscriptions(db, designated, relayUrls);
+
+  const allRelays = await getAllRelays(db);
+
+  const hasAcceptedForInstance = (url: string) =>
+    allRelays.some((r) => r.url === url && r.status === "accepted");
+  // Terminal (accepted or rejected) for the designated bot + URL — pending retries.
+  const designatedTerminalUrls = new Set(
+    allRelays
+      .filter(
+        (r) =>
+          r.botUsername === designated &&
+          (r.status === "accepted" || r.status === "rejected"),
+      )
+      .map((r) => r.url),
   );
 
-  // Resolve each relay actor once (shared across all bots).
   const signingIdentifier = botUsernames[0];
   const resolvedRelays: Array<{ relayUrl: string; recipient: { id: URL; inboxId: URL } }> = [];
 
@@ -826,57 +842,62 @@ export async function subscribeToRelays(
     }
   }
 
-  for (const botUsername of botUsernames) {
-    for (const { relayUrl, recipient } of resolvedRelays) {
-      if (skipSet.has(`${botUsername}:${relayUrl}`)) {
-        logger.info("Bot {bot} already subscribed to relay {url}, skipping", {
-          bot: botUsername,
-          url: relayUrl,
-        });
-        continue;
-      }
+  for (const { relayUrl, recipient } of resolvedRelays) {
+    if (hasAcceptedForInstance(relayUrl)) {
+      logger.info("Instance already has an accepted relay subscription for {url}, skipping", {
+        url: relayUrl,
+      });
+      continue;
+    }
+    if (designatedTerminalUrls.has(relayUrl)) {
+      logger.info("Designated bot {bot} has terminal state for relay {url}, skipping", {
+        bot: designated,
+        url: relayUrl,
+      });
+      continue;
+    }
 
-      try {
-        const followId = ctx.getObjectUri(Follow, {
-          identifier: botUsername,
-          id: crypto.randomUUID(),
-        });
+    try {
+      const followId = ctx.getObjectUri(Follow, {
+        identifier: designated,
+        id: crypto.randomUUID(),
+      });
 
-        const follow = new Follow({
-          id: followId,
-          actor: ctx.getActorUri(botUsername),
-          // ActivityRelay expects object=PUBLIC_COLLECTION (Mastodon-style subscription),
-          // not the relay actor's own URL (which triggers the LitePub peer-relay path
-          // and gets rejected because our actor URLs don't end in /relay).
-          object: PUBLIC_COLLECTION,
-        });
+      const follow = new Follow({
+        id: followId,
+        actor: ctx.getActorUri(designated),
+        // ActivityRelay expects object=PUBLIC_COLLECTION (Mastodon-style subscription),
+        // not the relay actor's own URL (which triggers the LitePub peer-relay path
+        // and gets rejected because our actor URLs don't end in /relay).
+        object: PUBLIC_COLLECTION,
+      });
 
-        await upsertRelay(
-          db,
-          botUsername,
-          relayUrl,
-          recipient.inboxId.href,
-          recipient.id.href,
-          followId.href,
-        );
+      await upsertRelay(
+        db,
+        designated,
+        relayUrl,
+        recipient.inboxId.href,
+        recipient.id.href,
+        followId.href,
+      );
 
-        await ctx.sendActivity(
-          { identifier: botUsername },
-          recipient,
-          follow,
-        );
+      await ctx.sendActivity(
+        { identifier: designated },
+        recipient,
+        follow,
+      );
 
-        logger.info(
-          "Sent Follow to relay {url} (actor: {actorId}) from {bot}",
-          { url: relayUrl, actorId: recipient.id.href, bot: botUsername },
-        );
-      } catch (error) {
-        logger.error("Failed to subscribe to relay {url} from {bot}: {error}", {
-          url: relayUrl,
-          bot: botUsername,
-          error,
-        });
-      }
+      logger.info("Sent Follow to relay {url} (actor: {actorId}) from {bot} (relays use one subscriber per instance)", {
+        url: relayUrl,
+        actorId: recipient.id.href,
+        bot: designated,
+      });
+    } catch (error) {
+      logger.error("Failed to subscribe to relay {url} from {bot}: {error}", {
+        url: relayUrl,
+        bot: designated,
+        error,
+      });
     }
   }
 }

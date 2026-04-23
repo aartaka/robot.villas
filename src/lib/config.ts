@@ -14,17 +14,49 @@ const BotSchema = z.object({
   default_hashtags: z.array(z.string().min(1).max(30)).max(3).optional(),
 });
 
-export const FeedsConfigSchema = z.object({
-  bots: z.record(
-    z.string().regex(/^[a-z0-9_]+$/, "Bot username must be lowercase alphanumeric or underscore"),
-    BotSchema,
-  ).refine((bots) => Object.keys(bots).length > 0, "At least one bot must be defined"),
-  follows: z.array(z.string().min(3)).optional().default([]),
-  relays: z.array(z.string().url()).optional().default([]),
-});
+export const FeedsConfigSchema = z
+  .object({
+    bots: z
+      .record(
+        z.string().regex(/^[a-z0-9_]+$/, "Bot username must be lowercase alphanumeric or underscore"),
+        BotSchema,
+      )
+      .refine((bots) => Object.keys(bots).length > 0, "At least one bot must be defined"),
+    follows: z.array(z.string().min(3)).optional().default([]),
+    relays: z.array(z.string().url()).optional().default([]),
+    /**
+     * Single bot that sends `Follow` to each relay. Relays expect one subscription per
+     * instance; all bots still publish `Create` to a relay if any subscription is accepted.
+     */
+    relay_subscription_bot: z
+      .string()
+      .regex(
+        /^[a-z0-9_]+$/,
+        "relay_subscription_bot must be lowercase alphanumeric or underscore",
+      )
+      .optional(),
+  })
+  .refine(
+    (data) =>
+      data.relay_subscription_bot == null || data.relay_subscription_bot in data.bots,
+    {
+      message: "relay_subscription_bot must be a key in bots",
+      path: ["relay_subscription_bot"],
+    },
+  );
 
 export type BotConfig = z.infer<typeof BotSchema>;
 export type FeedsConfig = z.infer<typeof FeedsConfigSchema>;
+
+/**
+ * Which bot subscribes to instance relays. Defaults to the first key in `bots` (insertion order in YAML).
+ */
+export function getRelaySubscriptionBot(config: FeedsConfig): string {
+  if (config.relay_subscription_bot) {
+    return config.relay_subscription_bot;
+  }
+  return Object.keys(config.bots)[0];
+}
 
 export function loadConfig(path: string): FeedsConfig {
   const raw = readFileSync(path, "utf-8");

@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray, isNotNull, isNull, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNotNull, isNull, ne, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate as runMigrations } from "drizzle-orm/postgres-js/migrator";
 import type postgres from "postgres";
@@ -464,6 +464,35 @@ export async function getTopPosts(db: Db, limit: number): Promise<FeedEntry[]> {
 }
 
 // --- Relay functions ---
+
+/**
+ * Soft-deletes non-designated relay rows (pending or rejected only) for the given URLs.
+ * Keeps "accepted" on any bot so `getAcceptedRelays` and delivery still work. Run before
+ * subscribing with a single designated bot to clear old per-bot rejections.
+ */
+export async function pruneRedundantRelaySubscriptions(
+  db: Db,
+  designatedBot: string,
+  relayUrls: string[],
+): Promise<void> {
+  if (relayUrls.length === 0) {
+    return;
+  }
+  await db
+    .update(schema.relays)
+    .set({ deletedAt: new Date() })
+    .where(
+      and(
+        isNull(schema.relays.deletedAt),
+        inArray(schema.relays.url, relayUrls),
+        ne(schema.relays.botUsername, designatedBot),
+        or(
+          eq(schema.relays.status, "pending"),
+          eq(schema.relays.status, "rejected"),
+        )!,
+      )!,
+    );
+}
 
 export interface RelayRow {
   id: number;

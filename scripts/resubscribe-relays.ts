@@ -1,10 +1,12 @@
 /**
  * Resets relay subscriptions so they are re-attempted on the next restart.
+ * Only the designated relay bot (`relay_subscription_bot` in feeds.yml, or
+ * the first bot) is updated — the same as subscribeToRelays() at runtime.
  *
  * Usage:
  *   DATABASE_URL=... yarn tsx scripts/resubscribe-relays.ts [relay-url ...]
  *
- * With no arguments, resets ALL pending and rejected relay subscriptions.
+ * With no arguments, resets pending and rejected relay rows for that bot.
  * Pass one or more relay URLs to target specific relays, e.g.:
  *   DATABASE_URL=... yarn tsx scripts/resubscribe-relays.ts \
  *     https://relay.toot.io/actor \
@@ -20,6 +22,7 @@
 
 import postgres from "postgres";
 import { and, eq, inArray, isNull, or } from "drizzle-orm";
+import { getRelaySubscriptionBot, loadConfig } from "../src/lib/config";
 import { createDb } from "../src/lib/db";
 import * as schema from "../src/lib/schema";
 
@@ -34,8 +37,13 @@ const targetUrls = process.argv.slice(2);
 const client = postgres(databaseUrl);
 const db = createDb(client);
 
+const config = loadConfig("feeds.yml");
+const designated = getRelaySubscriptionBot(config);
+console.log(`Using relay subscription bot: ${designated} (set relay_subscription_bot in feeds.yml to override).`);
+
 const conditions = [
   isNull(schema.relays.deletedAt),
+  eq(schema.relays.botUsername, designated),
   or(eq(schema.relays.status, "pending"), eq(schema.relays.status, "rejected"))!,
 ];
 

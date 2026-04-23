@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { getBlockedInstances, parseConfig, loadConfig } from "../config";
+import { getBlockedInstances, getRelaySubscriptionBot, parseConfig, loadConfig } from "../config";
 import { join } from "node:path";
 
 describe("parseConfig", () => {
@@ -129,6 +129,36 @@ bots:
     feed_url: "https://example.com/rss"
     display_name: "Test"
     summary: "${"y".repeat(501)}"
+`),
+    ).toThrow();
+  });
+
+  it("accepts optional relay_subscription_bot and getRelaySubscriptionBot returns it", () => {
+    const config = parseConfig(`
+bots:
+  a_bot:
+    feed_url: "https://example.com/a.xml"
+    display_name: "A"
+    summary: "A"
+  z_bot:
+    feed_url: "https://example.com/z.xml"
+    display_name: "Z"
+    summary: "Z"
+relay_subscription_bot: z_bot
+relays: []
+`);
+    expect(getRelaySubscriptionBot(config)).toBe("z_bot");
+  });
+
+  it("rejects relay_subscription_bot that is not a bot key", () => {
+    expect(() =>
+      parseConfig(`
+bots:
+  only_bot:
+    feed_url: "https://example.com/rss"
+    display_name: "B"
+    summary: "B"
+relay_subscription_bot: not_a_key
 `),
     ).toThrow();
   });
