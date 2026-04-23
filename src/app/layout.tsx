@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Roboto, Roboto_Mono } from "next/font/google";
+import { Footer } from "@icco/react-common/Footer";
+import { WebVitals } from "@icco/react-common/WebVitals";
 import { faviconSvg } from "@/lib/og-icon";
-import { WebVitals } from "@/components/WebVitals";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -52,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${roboto.variable} ${robotoMono.variable}`}
     >
       <body className="min-h-screen flex flex-col bg-base-100 font-body">
-        <WebVitals />
+        <WebVitals analyticsPath="analytics/robot-villas" />
         <header className="navbar bg-base-200 border-b border-base-300">
           <div className="container mx-auto flex items-center">
             <Link
@@ -63,8 +64,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <span>{domain}</span>
             </Link>
             <Link
-              href="/stats"
+              href="/posts"
               className="btn btn-ghost btn-sm font-display ml-auto"
+            >
+              Posts
+            </Link>
+            <Link
+              href="/tags"
+              className="btn btn-ghost btn-sm font-display"
+            >
+              Tags
+            </Link>
+            <Link
+              href="/stats"
+              className="btn btn-ghost btn-sm font-display"
             >
               Stats
             </Link>
@@ -79,30 +92,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="container mx-auto flex-1 px-4 py-8 max-w-4xl">
           {children}
         </main>
-        <footer className="footer sm:footer-horizontal footer-center bg-base-200 border-t border-base-300 text-base-content p-6 text-sm">
-          <nav className="flex flex-wrap justify-center gap-x-1">
-            <span>
-              &copy;{" "}
-              <a href="https://natwelch.com" className="link link-hover">
-                Nat Welch
-              </a>
-            </span>
-            <span>&middot;</span>
-            <a
-              href="https://github.com/icco/robot.villas"
-              className="link link-hover"
-            >
-              Source code
-            </a>
-            <span>&middot;</span>
-            <a
-              href="https://github.com/icco/robot.villas/edit/main/feeds.yml"
-              className="link link-hover"
-            >
-              Add or update a feed
-            </a>
-          </nav>
-        </footer>
+        <Footer
+          sourceRepo="https://github.com/icco/robot.villas"
+          editUrl="https://github.com/icco/robot.villas/edit/main/feeds.yml"
+          showRecurseCenter={false}
+          showSocial={false}
+          showRecurseRing={false}
+          showXXIIVVRing={false}
+        />
       </body>
     </html>
   );
