@@ -92,16 +92,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="container mx-auto flex-1 px-4 py-8 max-w-4xl">
           {children}
         </main>
-        <Footer
-          startYear={2025}
-          sourceRepo="https://github.com/icco/robot.villas"
-          editUrl="https://github.com/icco/robot.villas/edit/main/feeds.yml"
-          showRecurseCenter={false}
-          showSocial={false}
-          showRecurseRing={false}
-          showXXIIVVRing={false}
-          showPrivacyPolicy={true}
-        />
+        <div className="container mx-auto w-full max-w-4xl px-4">
+          <Footer
+            startYear={2025}
+            sourceRepo="https://github.com/icco/robot.villas"
+            editUrl="https://github.com/icco/robot.villas/edit/main/feeds.yml"
+            showRecurseCenter={false}
+            showSocial={false}
+            showRecurseRing={false}
+            showXXIIVVRing={false}
+            showPrivacyPolicy={true}
+          />
+        </div>
       </body>
     </html>
   );

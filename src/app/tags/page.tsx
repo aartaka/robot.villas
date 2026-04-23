@@ -32,7 +32,7 @@ export default async function TagsPage() {
           <li key={tag} className="flex items-center justify-between py-2">
             <Link
               href={`/tags/${encodeURIComponent(tag)}`}
-              className={hashtagClassNames.link}
+              className={hashtagClassNames.tagsIndex}
             >
               #{tag}
             </Link>
