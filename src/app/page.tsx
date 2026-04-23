@@ -87,7 +87,7 @@ export default function HomePage() {
               </div>
             )}
             <div className="min-w-0">
-              <span className="font-mono text-sm font-semibold text-primary/70 group-hover:text-primary transition-colors">
+              <span className="font-mono text-sm font-semibold group-hover:text-primary transition-colors">
                 @{username}
               </span>
               <span className="text-base-content/60 mx-1">&ndash;</span>

@@ -57,7 +57,7 @@ export function PostFeed({
             {showBotHandle && (
               <Link
                 href={`/@${e.botUsername}`}
-                className="shrink-0 font-mono text-xs text-primary/70 hover:text-primary transition-colors"
+                className="shrink-0 font-mono text-xs text-base-content/50"
               >
                 @{e.botUsername}
               </Link>
