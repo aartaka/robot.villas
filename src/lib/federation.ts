@@ -13,6 +13,8 @@ import { getLogger } from "@logtape/logtape";
 import { Temporal } from "@js-temporal/polyfill";
 import {
   Accept,
+  Activity,
+  Add,
   Announce,
   Application,
   Create,
@@ -168,6 +170,17 @@ function parseNoteRef(
   return { identifier, entryId };
 }
 
+/** Intentional no-op: we received a supported activity type but have no local handler. */
+function debugInboxNoopActivity(kind: string, activity: Activity): void {
+  logger.debug("Inbox {kind} (no local action): id={id} actor={actor} object={object} target={target}", {
+    kind,
+    id: activity.id?.href ?? null,
+    actor: activity.actorId?.href ?? null,
+    object: activity.objectId?.href ?? null,
+    target: activity.targetId?.href ?? null,
+  });
+}
+
 async function handleFollow(
   ctx: Context<void>,
   follow: Follow,
@@ -227,10 +240,17 @@ async function handleUndo(
   const object = await undo.getObject(ctx);
   if (object instanceof Follow) {
     if (!object.objectId || !undo.actorId) {
+      logger.debug("Undo (no local action): Follow missing objectId or actor on undo {undoId}", {
+        undoId: undo.id?.href ?? null,
+      });
       return;
     }
     const parsed = ctx.parseUri(object.objectId);
     if (parsed?.type !== "actor" || !botUsernames.includes(parsed.identifier)) {
+      logger.debug("Undo (no local action): Follow not for a known bot (undo {undoId}, object {objectId})", {
+        undoId: undo.id?.href ?? null,
+        objectId: object.objectId.href,
+      });
       return;
     }
     await removeFollower(db, parsed.identifier, undo.actorId.href);
@@ -248,6 +268,12 @@ async function handleUndo(
     }
     await decrementBoostCount(db, ref.identifier, ref.entryId);
     logger.info("Undo Boost on {identifier}/posts/{entryId}", ref);
+  } else {
+    logger.debug("Undo (no local action): unhandled object {objectType} id={objectId} (undo {undoId})", {
+      objectType: object == null ? "null" : object.constructor.name,
+      objectId: object?.id?.href ?? null,
+      undoId: undo.id?.href ?? null,
+    });
   }
 }
 
@@ -533,6 +559,11 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
     .on(Accept, async (ctx, accept) => {
       const object = await accept.getObject(ctx);
       if (!(object instanceof Follow) || !object.id) {
+        logger.debug("Accept (no local action): not a Follow with id (accept {acceptId} actor {actor} got {got})", {
+          acceptId: accept.id?.href ?? null,
+          actor: accept.actorId?.href ?? null,
+          got: object == null ? "null" : object.constructor.name,
+        });
         return;
       }
       const followIdHref = object.id.href;
@@ -543,6 +574,11 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
     .on(Reject, async (ctx, reject) => {
       const object = await reject.getObject(ctx);
       if (!(object instanceof Follow) || !object.id) {
+        logger.debug("Reject (no local action): not a Follow with id (reject {rejectId} actor {actor} got {got})", {
+          rejectId: reject.id?.href ?? null,
+          actor: reject.actorId?.href ?? null,
+          got: object == null ? "null" : object.constructor.name,
+        });
         return;
       }
       const followIdHref = object.id.href;
@@ -579,6 +615,10 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
     })
     .on(Delete, async (_ctx, del) => {
       if (!del.actorId) {
+        logger.debug("Delete (no local action): missing actorId (delete {deleteId} object {objectId})", {
+          deleteId: del.id?.href ?? null,
+          objectId: del.objectId?.href ?? null,
+        });
         return;
       }
       const removed = await removeFollowerFromAll(db, del.actorId.href);
@@ -587,10 +627,21 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
           actorId: del.actorId.href,
           count: removed,
         });
+      } else {
+        logger.debug("Delete (no local action): actor was not a stored follower ({actorId})", {
+          actorId: del.actorId.href,
+        });
       }
     })
-    .on(Update, async () => {})
-    .on(Create, async () => {})
+    .on(Update, async (_ctx, activity) => {
+      debugInboxNoopActivity("Update", activity);
+    })
+    .on(Create, async (_ctx, activity) => {
+      debugInboxNoopActivity("Create", activity);
+    })
+    .on(Add, async (_ctx, add) => {
+      debugInboxNoopActivity("Add", add);
+    })
     .onError((_ctx, error) => {
       logger.error("Inbox listener error: {error}", { error });
     });
