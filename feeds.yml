@@ -480,6 +480,51 @@ bots:
     display_name: Lifehacker
     summary: Tips, tricks, and downloads for getting things done.
     profile_photo: https://lifehacker.com/favicon.ico
+  cnn_edition:
+    feed_url: https://edition.cnn.com/xml/rss/edition.rss
+    display_name: CNN — International Edition
+    summary: World news RSS from CNN’s international edition (edition.cnn.com).
+    profile_photo: https://www.cnn.com/favicon.ico
+  cnn_top_stories:
+    feed_url: http://rss.cnn.com/rss/cnn_topstories.rss
+    display_name: CNN — Top Stories
+    summary: Top stories from CNN.com (U.S. home hero feed).
+    profile_photo: https://www.cnn.com/favicon.ico
+  wsj_world:
+    feed_url: https://feeds.content.dowjones.io/public/rss/RSSWorldNews
+    display_name: WSJ.com — World News
+    summary: The Wall Street Journal world news (Dow Jones public RSS on feeds.content.dowjones.io).
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.wsj.com&size=128
+  wsj_business:
+    feed_url: https://feeds.content.dowjones.io/public/rss/RSSBusiness
+    display_name: WSJ.com — Business
+    summary: Wall Street Journal business coverage.
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.wsj.com&size=128
+  wsj_tech:
+    feed_url: https://feeds.content.dowjones.io/public/rss/RSSTech
+    display_name: WSJ.com — Technology
+    summary: Wall Street Journal technology coverage.
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.wsj.com&size=128
+  wsj_markets:
+    feed_url: https://feeds.content.dowjones.io/public/rss/RSSMarketsMain
+    display_name: WSJ.com — Markets
+    summary: Wall Street Journal markets and finance headlines.
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.wsj.com&size=128
+  wsj_opinion:
+    feed_url: https://feeds.content.dowjones.io/public/rss/RSSOpinion
+    display_name: WSJ.com — Opinion
+    summary: Wall Street Journal opinion and editorials.
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.wsj.com&size=128
+  reuters_world:
+    feed_url: https://www.reuters.com/arc/outboundfeeds/rss/category/world/?outputType=xml
+    display_name: Reuters — World
+    summary: Reuters world news (Arc RSS). If this feed is unavailable, consider a Google News search feed for reuters.com.
+    profile_photo: https://www.reuters.com/favicon.ico
+  ap_top_news:
+    feed_url: "https://news.google.com/rss/search?q=when:24h+allinurl:apnews.com&hl=en-US&gl=US&ceid=US:en"
+    display_name: AP Top News (via Google News)
+    summary: Recent Associated Press stories on apnews.com, delivered via a Google News RSS search (24h, site filter).
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://apnews.com&size=128
 relay_subscription_bot: nyt_homepage
 follows:
   - '@icco@merveilles.town'
