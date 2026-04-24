@@ -17,6 +17,13 @@ export async function register() {
   await migrate(db);
   logger.info("Database migrations complete");
 
+  if (process.env.DISABLE_BACKGROUND === "true") {
+    logger.info(
+      "DISABLE_BACKGROUND=true: skipping queue, federation tasks, and poller",
+    );
+    return;
+  }
+
   federation.startQueue();
   logger.info("Fedify message queue worker started");
 
