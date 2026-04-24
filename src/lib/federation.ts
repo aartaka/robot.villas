@@ -13,7 +13,6 @@ import { getLogger } from "@logtape/logtape";
 import { Temporal } from "@js-temporal/polyfill";
 import {
   Accept,
-  Activity,
   Add,
   Announce,
   Application,
@@ -168,17 +167,6 @@ function parseNoteRef(
     return null;
   }
   return { identifier, entryId };
-}
-
-/** Intentional no-op: we received a supported activity type but have no local handler. */
-function debugInboxNoopActivity(kind: string, activity: Activity): void {
-  logger.debug("Inbox {kind} (no local action): id={id} actor={actor} object={object} target={target}", {
-    kind,
-    id: activity.id?.href ?? null,
-    actor: activity.actorId?.href ?? null,
-    object: activity.objectId?.href ?? null,
-    target: activity.targetId?.href ?? null,
-  });
 }
 
 async function handleFollow(
@@ -634,13 +622,28 @@ export function setupFederation(deps: FederationDeps): Federation<void> {
       }
     })
     .on(Update, async (_ctx, activity) => {
-      debugInboxNoopActivity("Update", activity);
+      logger.debug("Update (no local action): id={id} actor={actor} object={object} target={target}", {
+        id: activity.id?.href ?? null,
+        actor: activity.actorId?.href ?? null,
+        object: activity.objectId?.href ?? null,
+        target: activity.targetId?.href ?? null,
+      });
     })
     .on(Create, async (_ctx, activity) => {
-      debugInboxNoopActivity("Create", activity);
+      logger.debug("Create (no local action): id={id} actor={actor} object={object} target={target}", {
+        id: activity.id?.href ?? null,
+        actor: activity.actorId?.href ?? null,
+        object: activity.objectId?.href ?? null,
+        target: activity.targetId?.href ?? null,
+      });
     })
     .on(Add, async (_ctx, add) => {
-      debugInboxNoopActivity("Add", add);
+      logger.debug("Add (no local action): id={id} actor={actor} object={object} target={target}", {
+        id: add.id?.href ?? null,
+        actor: add.actorId?.href ?? null,
+        object: add.objectId?.href ?? null,
+        target: add.targetId?.href ?? null,
+      });
     })
     .onError((_ctx, error) => {
       logger.error("Inbox listener error: {error}", { error });
