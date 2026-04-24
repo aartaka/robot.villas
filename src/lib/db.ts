@@ -411,7 +411,11 @@ export async function getGlobalStats(db: Db): Promise<{
   };
 }
 
-export async function getPerBotStats(db: Db): Promise<BotStats[]> {
+export async function getPerBotStats(
+  db: Db,
+  /** Every configured bot; those with no feed rows get zeros and still appear. */
+  botUsernames: string[],
+): Promise<BotStats[]> {
   const postStats = await db
     .select({
       botUsername: schema.feedEntries.botUsername,
@@ -424,6 +428,8 @@ export async function getPerBotStats(db: Db): Promise<BotStats[]> {
     .where(isNull(schema.feedEntries.deletedAt))
     .groupBy(schema.feedEntries.botUsername);
 
+  const postMap = new Map(postStats.map((r) => [r.botUsername, r]));
+
   const followerCounts = await db
     .select({
       botUsername: schema.followers.botUsername,
@@ -435,14 +441,17 @@ export async function getPerBotStats(db: Db): Promise<BotStats[]> {
 
   const followerMap = new Map(followerCounts.map((r) => [r.botUsername, r.followerCount]));
 
-  return postStats.map((r) => ({
-    botUsername: r.botUsername,
-    postCount: r.postCount,
-    followerCount: followerMap.get(r.botUsername) ?? 0,
-    totalLikes: Number(r.totalLikes),
-    totalBoosts: Number(r.totalBoosts),
-    latestPostAt: r.latestPostAt,
-  }));
+  return botUsernames.map((botUsername) => {
+    const r = postMap.get(botUsername);
+    return {
+      botUsername,
+      postCount: r?.postCount ?? 0,
+      followerCount: followerMap.get(botUsername) ?? 0,
+      totalLikes: r ? Number(r.totalLikes) : 0,
+      totalBoosts: r ? Number(r.totalBoosts) : 0,
+      latestPostAt: r?.latestPostAt ?? null,
+    };
+  });
 }
 
 export async function getTopPosts(db: Db, limit: number): Promise<FeedEntry[]> {

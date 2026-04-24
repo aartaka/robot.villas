@@ -27,17 +27,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function StatsPage() {
   const { config, db, domain } = getGlobals();
-  const botCount = Object.keys(config.bots).length;
+  const botUsernames = Object.keys(config.bots).sort((a, b) =>
+    a.localeCompare(b),
+  );
+  const botCount = botUsernames.length;
   const [global, perBot, topPosts] = await Promise.all([
     getGlobalStats(db),
-    getPerBotStats(db),
+    getPerBotStats(db, botUsernames),
     getTopPosts(db, 20),
   ]);
 
   const fmt = (n: number) => n.toLocaleString("en-US");
-  const sortedBots = [...perBot].sort((a, b) =>
-    a.botUsername.localeCompare(b.botUsername),
-  );
   const filteredTopPosts = topPosts.filter(
     (p) => p.likeCount + p.boostCount > 0,
   );
@@ -89,7 +89,7 @@ export default async function StatsPage() {
             </tr>
           </thead>
           <tbody>
-            {sortedBots.map((bot) => {
+            {perBot.map((bot) => {
               const displayName =
                 config.bots[bot.botUsername]?.display_name ?? bot.botUsername;
               return (
