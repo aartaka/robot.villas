@@ -276,67 +276,67 @@ bots:
     summary: BBC News — front page and breaking stories from the British Broadcasting Corporation.
   npr_news:
     feed_url: https://feeds.npr.org/1001/rss.xml
-    display_name: "NPR Topics: News"
+    display_name: 'NPR Topics: News'
     summary: NPR news, audio, and podcasts — breaking stories, national and world news, politics, business, science, and technology.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_national:
     feed_url: https://feeds.npr.org/1003/rss.xml
-    display_name: "NPR Topics: National"
+    display_name: 'NPR Topics: National'
     summary: NPR coverage of U.S. news, politics, elections, business, arts, culture, health, science, and technology.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_world:
     feed_url: https://feeds.npr.org/1004/rss.xml
-    display_name: "NPR Topics: World"
+    display_name: 'NPR Topics: World'
     summary: International news and analysis from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_business:
     feed_url: https://feeds.npr.org/1006/rss.xml
-    display_name: "NPR Topics: Business"
+    display_name: 'NPR Topics: Business'
     summary: Business and economy coverage from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_science:
     feed_url: https://feeds.npr.org/1007/rss.xml
-    display_name: "NPR Topics: Science"
+    display_name: 'NPR Topics: Science'
     summary: Science and research coverage from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_culture:
     feed_url: https://feeds.npr.org/1008/rss.xml
-    display_name: "NPR Topics: Culture"
+    display_name: 'NPR Topics: Culture'
     summary: Arts and culture coverage from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_politics:
     feed_url: https://feeds.npr.org/1012/rss.xml
-    display_name: "NPR Topics: Politics"
+    display_name: 'NPR Topics: Politics'
     summary: Political news and analysis from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_education:
     feed_url: https://feeds.npr.org/1013/rss.xml
-    display_name: "NPR Topics: Education"
+    display_name: 'NPR Topics: Education'
     summary: Education news and ideas from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_race_and_culture:
     feed_url: https://feeds.npr.org/1015/rss.xml
-    display_name: "NPR Topics: Race & Culture"
+    display_name: 'NPR Topics: Race & Culture'
     summary: Race, identity, and culture stories from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_economy:
     feed_url: https://feeds.npr.org/1017/rss.xml
-    display_name: "NPR Topics: Economy"
+    display_name: 'NPR Topics: Economy'
     summary: Economic news and analysis from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_technology:
     feed_url: https://feeds.npr.org/1019/rss.xml
-    display_name: "NPR Topics: Technology"
+    display_name: 'NPR Topics: Technology'
     summary: Technology news from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_movies:
     feed_url: https://feeds.npr.org/1045/rss.xml
-    display_name: "NPR Topics: Movies"
+    display_name: 'NPR Topics: Movies'
     summary: Film news and reviews from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_music:
     feed_url: https://feeds.npr.org/1102/rss.xml
-    display_name: "NPR Topics: Music"
+    display_name: 'NPR Topics: Music'
     summary: Music news and features from NPR.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_news_now:
@@ -371,7 +371,7 @@ bots:
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_wait_wait:
     feed_url: https://feeds.npr.org/344098539/podcast.xml
-    display_name: "Wait Wait... Don’t Tell Me!"
+    display_name: Wait Wait... Don’t Tell Me!
     summary: The NPR news quiz; panelists, listeners, and Carl Kasell.
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   npr_politics_podcast:
@@ -426,7 +426,7 @@ bots:
     profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
   guardian_world:
     feed_url: https://www.theguardian.com/world/rss
-    display_name: "World news | The Guardian"
+    display_name: World news | The Guardian
     summary: World news, comment, and analysis from the Guardian.
     profile_photo: https://www.theguardian.com/favicon.ico
   wapo_world:
@@ -445,7 +445,7 @@ bots:
     profile_photo: https://www.wired.com/apple-touch-icon.png
   hnrss_frontpage:
     feed_url: https://hnrss.org/frontpage
-    display_name: "Hacker News: Front Page"
+    display_name: 'Hacker News: Front Page'
     summary: Front-page stories from Hacker News, republished by hnrss.org.
   engadget:
     feed_url: https://www.engadget.com/rss.xml
