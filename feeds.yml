@@ -526,7 +526,7 @@ bots:
     summary: Reuters world news (Arc RSS). If this feed is unavailable, consider a Google News search feed for reuters.com.
     profile_photo: https://www.reuters.com/favicon.ico
   ap_top_news:
-    feed_url: "https://news.google.com/rss/search?q=when:24h+allinurl:apnews.com&hl=en-US&gl=US&ceid=US:en"
+    feed_url: https://news.google.com/rss/search?q=when:24h+allinurl:apnews.com&hl=en-US&gl=US&ceid=US:en
     display_name: AP Top News (via Google News)
     summary: Recent Associated Press stories on apnews.com, delivered via a Google News RSS search (24h, site filter).
     profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://apnews.com&size=128
