@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { hashtagClassNames } from "@/lib/hashtag-classnames";
 import { getGlobals } from "@/lib/globals";
 import { getAllTags } from "@/lib/db";
 
@@ -32,7 +31,7 @@ export default async function TagsPage() {
           <li key={tag} className="flex items-center justify-between py-2">
             <Link
               href={`/tags/${encodeURIComponent(tag)}`}
-              className={hashtagClassNames.tagsIndex}
+              className="text-sm font-mono font-semibold text-base-content hover:underline underline-offset-2"
             >
               #{tag}
             </Link>

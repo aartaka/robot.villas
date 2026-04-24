@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { type FeedEntry, entryObjectUrl } from "@/lib/feed-entry";
-import { hashtagClassNames } from "@/lib/hashtag-classnames";
 import { EntryInteractButtons } from "./entry-interact-buttons";
 
 const DATE: Intl.DateTimeFormatOptions = {
@@ -75,7 +74,11 @@ export function PostFeed({
                   <Link
                     key={t}
                     href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
-                    className={`mr-1 ${h === t.toLowerCase() ? hashtagClassNames.linkActive : hashtagClassNames.link}`}
+                    className={
+                      h === t.toLowerCase()
+                        ? "mr-1 text-xs font-mono text-primary hover:text-primary/70 transition-colors"
+                        : "mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors"
+                    }
                   >
                     #{t}
                   </Link>
