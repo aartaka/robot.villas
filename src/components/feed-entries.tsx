@@ -49,7 +49,7 @@ export function PostFeed({
   return (
     <ul className="divide-y divide-base-300">
       {entries.map((e) => (
-        <li key={e.id} className="flex items-baseline justify-between gap-4 py-2">
+        <li key={e.id} className="flex flex-col gap-1 py-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
           <p className="text-sm leading-relaxed min-w-0">
             {showBotHandle && (
               <>
@@ -83,7 +83,7 @@ export function PostFeed({
               </>
             )}
           </p>
-          <span className="flex shrink-0 items-center gap-1">
+          <span className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
             <EntryInteractButtons
               activityUri={entryObjectUrl(domain, e.botUsername, e.id)}
               boostCount={e.boostCount}
