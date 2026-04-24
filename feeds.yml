@@ -463,7 +463,7 @@ bots:
     summary: Innovation, leadership, and the future of business and design.
     profile_photo: https://www.fastcompany.com/apple-touch-icon.png
   hbr:
-    feed_url: https://feeds.hbr.org/harvardbusiness
+    feed_url: http://feeds.hbr.org/harvardbusiness
     display_name: HBR.org
     summary: Practical insights, tools, and resources from leading business thought leaders.
     profile_photo: https://hbr.org/favicon.ico
