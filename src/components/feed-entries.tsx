@@ -74,11 +74,7 @@ export function PostFeed({
                   <Link
                     key={t}
                     href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
-                    className={
-                      h === t.toLowerCase()
-                        ? "mr-1 text-xs font-mono text-primary hover:text-primary/70 transition-colors"
-                        : "mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors"
-                    }
+                    className="link mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors"
                   >
                     #{t}
                   </Link>
