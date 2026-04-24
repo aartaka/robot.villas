@@ -67,7 +67,7 @@ export function PostFeed({
                   <Fragment key={t}>
                     <Link
                       href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
-                      className={`link link-hover mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors${tagHighlight?.toLowerCase() === t.toLowerCase() ? " font-bold" : ""}`}
+                      className={`link link-hover text-xs font-mono text-primary/70 hover:text-primary transition-colors${tagHighlight?.toLowerCase() === t.toLowerCase() ? " font-bold" : ""}`}
                     >
                       #{t}
                     </Link>{" "}
