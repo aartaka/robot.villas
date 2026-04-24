@@ -265,6 +265,11 @@ bots:
     display_name: NYT > Food
     summary: Food and dining news from The New York Times.
     profile_photo: https://static01.nyt.com/images/icons/ios-default-homescreen-57x57.png
+  nyt_sports:
+    feed_url: https://www.nytimes.com/athletic/rss/news/
+    display_name: The Athletic
+    summary: Sports journalism from The Athletic, now part of The New York Times.
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://theathletic.com&size=128
   hell_gate:
     feed_url: https://hellgatenyc.com/all-posts/rss/
     display_name: Hell Gate
