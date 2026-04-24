@@ -274,6 +274,7 @@ bots:
     feed_url: https://feeds.bbci.co.uk/news/rss.xml
     display_name: BBC News
     summary: BBC News — front page and breaking stories from the British Broadcasting Corporation.
+    profile_photo: https://www.bbc.com/favicon.ico
   npr_news:
     feed_url: https://feeds.npr.org/1001/rss.xml
     display_name: 'NPR Topics: News'
@@ -433,6 +434,7 @@ bots:
     feed_url: https://feeds.washingtonpost.com/rss/world
     display_name: The Washington Post — World
     summary: Breaking world news, analysis, and the Post’s international reporting.
+    profile_photo: https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.washingtonpost.com&size=128
   techcrunch:
     feed_url: https://techcrunch.com/feed/
     display_name: TechCrunch
@@ -447,6 +449,7 @@ bots:
     feed_url: https://hnrss.org/frontpage
     display_name: 'Hacker News: Front Page'
     summary: Front-page stories from Hacker News, republished by hnrss.org.
+    profile_photo: https://news.ycombinator.com/y18.svg
   engadget:
     feed_url: https://www.engadget.com/rss.xml
     display_name: Engadget
@@ -466,15 +469,17 @@ bots:
     feed_url: http://feeds.hbr.org/harvardbusiness
     display_name: HBR.org
     summary: Practical insights, tools, and resources from leading business thought leaders.
-    profile_photo: https://hbr.org/favicon.ico
+    profile_photo: https://hbr.org/favicon-32x32.png
   scientific_american:
     feed_url: https://www.scientificamerican.com/platform/syndication/rss/
     display_name: Scientific American
     summary: Awe-inspiring advances in science and technology from Scientific American.
+    profile_photo: https://www.scientificamerican.com/static/sciam.svg
   lifehacker:
     feed_url: https://lifehacker.com/feed/
     display_name: Lifehacker
     summary: Tips, tricks, and downloads for getting things done.
+    profile_photo: https://lifehacker.com/favicon.ico
 relay_subscription_bot: nyt_homepage
 follows:
   - '@icco@merveilles.town'
