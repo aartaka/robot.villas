@@ -450,11 +450,6 @@ bots:
     display_name: WIRED
     summary: The latest from WIRED on technology, science, and culture.
     profile_photo: https://www.wired.com/apple-touch-icon.png
-  hnrss_frontpage:
-    feed_url: https://hnrss.org/frontpage
-    display_name: 'Hacker News: Front Page'
-    summary: Front-page stories from Hacker News, republished by hnrss.org.
-    profile_photo: https://news.ycombinator.com/y18.svg
   engadget:
     feed_url: https://www.engadget.com/rss.xml
     display_name: Engadget
