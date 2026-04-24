@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${roboto.variable} ${robotoMono.variable}`}
     >
       <body className="min-h-screen flex flex-col bg-base-100 font-body">
-        <WebVitals analyticsPath="analytics/robot-villas" />
+        <WebVitals analyticsPath="/analytics/robot-villas" />
         <header className="navbar bg-base-200 border-b border-base-300">
           <div className="container mx-auto flex items-center">
             <Link
