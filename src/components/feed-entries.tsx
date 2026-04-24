@@ -11,14 +11,8 @@ const DATE: Intl.DateTimeFormatOptions = {
 type PostFeedProps = {
   domain: string;
   entries: FeedEntry[];
-  /** On /tags/[tag], highlight links for this tag */
   tagHighlight?: string;
-  /** Shown as a single list row when `entries` is empty */
   emptyMessage?: string;
-  /**
-   * Set false on a bot profile: the @handle is already in the page header.
-   * @default true
-   */
   showBotHandle?: boolean;
 };
 
@@ -42,8 +36,6 @@ export function PostFeed({
     }
     return <ul className="divide-y divide-base-300" />;
   }
-
-  const h = tagHighlight?.toLowerCase();
 
   return (
     <ul className="divide-y divide-base-300">
@@ -74,7 +66,7 @@ export function PostFeed({
                   <Link
                     key={t}
                     href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
-                    className="link mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors"
+                    className={`link link-hover mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors${tagHighlight?.toLowerCase() === t.toLowerCase() ? " font-bold" : ""}`}
                   >
                     #{t}
                   </Link>
