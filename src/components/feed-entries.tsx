@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { type FeedEntry, entryObjectUrl } from "@/lib/feed-entry";
 import { EntryInteractButtons } from "./entry-interact-buttons";
@@ -63,13 +64,14 @@ export function PostFeed({
               <>
                 {" "}
                 {e.hashtags.map((t) => (
-                  <Link
-                    key={t}
-                    href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
-                    className={`link link-hover mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors${tagHighlight?.toLowerCase() === t.toLowerCase() ? " font-bold" : ""}`}
-                  >
-                    #{t}
-                  </Link>
+                  <Fragment key={t}>
+                    <Link
+                      href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+                      className={`link link-hover mr-1 text-xs font-mono text-primary/70 hover:text-primary transition-colors${tagHighlight?.toLowerCase() === t.toLowerCase() ? " font-bold" : ""}`}
+                    >
+                      #{t}
+                    </Link>{" "}
+                  </Fragment>
                 ))}
               </>
             )}
