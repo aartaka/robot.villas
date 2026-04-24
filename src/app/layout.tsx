@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Roboto, Roboto_Mono } from "next/font/google";
+import {
+  QueueListIcon,
+  TagIcon,
+  ChartBarIcon,
+  SignalIcon,
+} from "@heroicons/react/24/outline";
 import { Footer } from "@icco/react-common/Footer";
 import { WebVitals } from "@icco/react-common/WebVitals";
 import { faviconSvg } from "@/lib/og-icon";
@@ -63,30 +69,28 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <span className="text-2xl">🤖</span>
               <span>{domain}</span>
             </Link>
-            <Link
-              href="/posts"
-              className="btn btn-ghost btn-sm font-display ml-auto"
-            >
-              Posts
-            </Link>
-            <Link
-              href="/tags"
-              className="btn btn-ghost btn-sm font-display"
-            >
-              Tags
-            </Link>
-            <Link
-              href="/stats"
-              className="btn btn-ghost btn-sm font-display"
-            >
-              Stats
-            </Link>
-            <Link
-              href="/status"
-              className="btn btn-ghost btn-sm font-display"
-            >
-              Status
-            </Link>
+            <nav className="flex items-center gap-1 ml-auto">
+              <div className="tooltip tooltip-bottom" data-tip="Posts">
+                <Link href="/posts" className="btn btn-ghost btn-sm" aria-label="Posts">
+                  <QueueListIcon className="h-5 w-5" />
+                </Link>
+              </div>
+              <div className="tooltip tooltip-bottom" data-tip="Tags">
+                <Link href="/tags" className="btn btn-ghost btn-sm" aria-label="Tags">
+                  <TagIcon className="h-5 w-5" />
+                </Link>
+              </div>
+              <div className="tooltip tooltip-bottom" data-tip="Stats">
+                <Link href="/stats" className="btn btn-ghost btn-sm" aria-label="Stats">
+                  <ChartBarIcon className="h-5 w-5" />
+                </Link>
+              </div>
+              <div className="tooltip tooltip-bottom" data-tip="Status">
+                <Link href="/status" className="btn btn-ghost btn-sm" aria-label="Status">
+                  <SignalIcon className="h-5 w-5" />
+                </Link>
+              </div>
+            </nav>
           </div>
         </header>
         <main className="container mx-auto flex-1 px-4 py-8 max-w-4xl">

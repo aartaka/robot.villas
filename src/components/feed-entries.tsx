@@ -24,7 +24,7 @@ type PostFeedProps = {
 };
 
 /**
- * One shared post list: (optional @bot), title, hashtags, boost/favorite, date.
+ * One shared post list: (optional @bot), title, hashtags, boost/favorite, date — all inline.
  */
 export function PostFeed({
   domain,
@@ -37,7 +37,7 @@ export function PostFeed({
     if (emptyMessage) {
       return (
         <ul className="divide-y divide-base-300">
-          <li className="py-4 text-base-content/50 italic">{emptyMessage}</li>
+          <li className="py-3 text-base-content/50 italic">{emptyMessage}</li>
         </ul>
       );
     }
@@ -49,51 +49,40 @@ export function PostFeed({
   return (
     <ul className="divide-y divide-base-300">
       {entries.map((e) => (
-        <li
-          key={e.id}
-          className="flex flex-col gap-1 py-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
-        >
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <div className="flex min-w-0 items-baseline gap-x-3">
-              {showBotHandle && (
+        <li key={e.id} className="flex items-baseline justify-between gap-4 py-2">
+          <p className="text-sm leading-relaxed min-w-0">
+            {showBotHandle && (
+              <>
                 <Link
                   href={`/@${e.botUsername}`}
-                  className="shrink-0 font-mono text-xs text-base-content/50"
+                  className="font-mono text-xs text-base-content/50 hover:text-base-content/80 mr-1"
                 >
                   @{e.botUsername}
-                </Link>
-              )}
-              {e.url ? (
-                <a
-                  href={e.url}
-                  className="link link-hover min-w-0 flex-1 break-words font-medium"
-                >
-                  {e.title}
-                </a>
-              ) : (
-                <span className="min-w-0 flex-1 break-words font-medium">
-                  {e.title}
-                </span>
-              )}
-            </div>
+                </Link>{" "}
+              </>
+            )}
+            {e.url ? (
+              <a href={e.url} className="link link-hover font-medium">
+                {e.title}
+              </a>
+            ) : (
+              <span className="font-medium">{e.title}</span>
+            )}
             {e.hashtags.length > 0 && (
-              <span className="flex flex-wrap gap-1">
+              <>
+                {" "}
                 {e.hashtags.map((t) => (
                   <Link
                     key={t}
                     href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
-                    className={
-                      h === t.toLowerCase()
-                        ? hashtagClassNames.linkActive
-                        : hashtagClassNames.link
-                    }
+                    className={`mr-1 ${h === t.toLowerCase() ? hashtagClassNames.linkActive : hashtagClassNames.link}`}
                   >
                     #{t}
                   </Link>
                 ))}
-              </span>
+              </>
             )}
-          </div>
+          </p>
           <span className="flex shrink-0 items-center gap-1">
             <EntryInteractButtons
               activityUri={entryObjectUrl(domain, e.botUsername, e.id)}
@@ -103,7 +92,7 @@ export function PostFeed({
             {e.publishedAt && (
               <time
                 dateTime={e.publishedAt.toISOString()}
-                className="whitespace-nowrap text-xs text-base-content/50"
+                className="text-xs text-base-content/40 whitespace-nowrap"
               >
                 {e.publishedAt.toLocaleDateString("en-US", DATE)}
               </time>
