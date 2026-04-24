@@ -270,6 +270,211 @@ bots:
     display_name: Hell Gate
     summary: Subscriber-funded, worker-owned news outlet about New York City.
     profile_photo: https://hellgatenyc.com/assets/svg/logo-standard.svg
+  bbc_news:
+    feed_url: https://feeds.bbci.co.uk/news/rss.xml
+    display_name: BBC News
+    summary: BBC News — front page and breaking stories from the British Broadcasting Corporation.
+  npr_news:
+    feed_url: https://feeds.npr.org/1001/rss.xml
+    display_name: "NPR Topics: News"
+    summary: NPR news, audio, and podcasts — breaking stories, national and world news, politics, business, science, and technology.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_national:
+    feed_url: https://feeds.npr.org/1003/rss.xml
+    display_name: "NPR Topics: National"
+    summary: NPR coverage of U.S. news, politics, elections, business, arts, culture, health, science, and technology.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_world:
+    feed_url: https://feeds.npr.org/1004/rss.xml
+    display_name: "NPR Topics: World"
+    summary: International news and analysis from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_business:
+    feed_url: https://feeds.npr.org/1006/rss.xml
+    display_name: "NPR Topics: Business"
+    summary: Business and economy coverage from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_science:
+    feed_url: https://feeds.npr.org/1007/rss.xml
+    display_name: "NPR Topics: Science"
+    summary: Science and research coverage from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_culture:
+    feed_url: https://feeds.npr.org/1008/rss.xml
+    display_name: "NPR Topics: Culture"
+    summary: Arts and culture coverage from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_politics:
+    feed_url: https://feeds.npr.org/1012/rss.xml
+    display_name: "NPR Topics: Politics"
+    summary: Political news and analysis from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_education:
+    feed_url: https://feeds.npr.org/1013/rss.xml
+    display_name: "NPR Topics: Education"
+    summary: Education news and ideas from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_race_and_culture:
+    feed_url: https://feeds.npr.org/1015/rss.xml
+    display_name: "NPR Topics: Race & Culture"
+    summary: Race, identity, and culture stories from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_economy:
+    feed_url: https://feeds.npr.org/1017/rss.xml
+    display_name: "NPR Topics: Economy"
+    summary: Economic news and analysis from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_technology:
+    feed_url: https://feeds.npr.org/1019/rss.xml
+    display_name: "NPR Topics: Technology"
+    summary: Technology news from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_movies:
+    feed_url: https://feeds.npr.org/1045/rss.xml
+    display_name: "NPR Topics: Movies"
+    summary: Film news and reviews from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_music:
+    feed_url: https://feeds.npr.org/1102/rss.xml
+    display_name: "NPR Topics: Music"
+    summary: Music news and features from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_news_now:
+    feed_url: https://feeds.npr.org/500005/podcast.xml
+    display_name: NPR News Now
+    summary: Short hourly NPR newscast updates.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_up_first:
+    feed_url: https://feeds.npr.org/510318/podcast.xml
+    display_name: Up First
+    summary: Morning news podcast from NPR — the biggest stories, in about ten minutes.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_consider_this:
+    feed_url: https://feeds.npr.org/510355/podcast.xml
+    display_name: Consider This
+    summary: Daily context on the day’s biggest story from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_planet_money:
+    feed_url: https://feeds.npr.org/510289/podcast.xml
+    display_name: Planet Money
+    summary: NPR podcast about the economy, explained in human terms.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_fresh_air:
+    feed_url: https://feeds.npr.org/381444908/podcast.xml
+    display_name: Fresh Air
+    summary: Interviews and reviews with Terry Gross and the Fresh Air team.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_ted_radio_hour:
+    feed_url: https://feeds.npr.org/510298/podcast.xml
+    display_name: TED Radio Hour
+    summary: A journey through big ideas, based on talks from the TED stage.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_wait_wait:
+    feed_url: https://feeds.npr.org/344098539/podcast.xml
+    display_name: "Wait Wait... Don’t Tell Me!"
+    summary: The NPR news quiz; panelists, listeners, and Carl Kasell.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_politics_podcast:
+    feed_url: https://feeds.npr.org/510310/podcast.xml
+    display_name: NPR Politics Podcast
+    summary: Weekly roundups and deep dives on politics from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_code_switch:
+    feed_url: https://feeds.npr.org/510312/podcast.xml
+    display_name: Code Switch
+    summary: Race and identity, with hosts of color and heart.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_throughline:
+    feed_url: https://feeds.npr.org/510333/podcast.xml
+    display_name: Throughline
+    summary: History, one story at a time — the past, unfinished, from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_pop_culture_happy_hour:
+    feed_url: https://feeds.npr.org/510282/podcast.xml
+    display_name: Pop Culture Happy Hour
+    summary: What to watch, read, and play — a film, TV, and book discussion show from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_all_songs_considered:
+    feed_url: https://feeds.npr.org/510019/podcast.xml
+    display_name: All Songs Considered
+    summary: New-music discovery and long conversations with Bob Boilen and friends.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_storycorps:
+    feed_url: https://feeds.npr.org/510200/podcast.xml
+    display_name: StoryCorps
+    summary: Everyday people recording conversations in StoryCorps booths, shared on NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_hidden_brain:
+    feed_url: https://feeds.npr.org/510308/podcast.xml
+    display_name: Hidden Brain
+    summary: Science and storytelling, exploring the unconscious patterns that drive human behavior.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_latino_usa:
+    feed_url: https://feeds.npr.org/510016/podcast.xml
+    display_name: Latino USA
+    summary: News and culture from the Latino USA and Futuro Media team.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_all_things_considered:
+    feed_url: https://feeds.npr.org/2/podcast.xml
+    display_name: All Things Considered
+    summary: The flagship evening news magazine from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  npr_morning_edition:
+    feed_url: https://feeds.npr.org/3/podcast.xml
+    display_name: Morning Edition
+    summary: The flagship morning news magazine from NPR.
+    profile_photo: https://media.npr.org/chrome/favicon/favicon-32x32.png
+  guardian_world:
+    feed_url: https://www.theguardian.com/world/rss
+    display_name: "World news | The Guardian"
+    summary: World news, comment, and analysis from the Guardian.
+    profile_photo: https://www.theguardian.com/favicon.ico
+  wapo_world:
+    feed_url: https://feeds.washingtonpost.com/rss/world
+    display_name: The Washington Post — World
+    summary: Breaking world news, analysis, and the Post’s international reporting.
+  techcrunch:
+    feed_url: https://techcrunch.com/feed/
+    display_name: TechCrunch
+    summary: Startup and technology news.
+    profile_photo: https://techcrunch.com/wp-content/uploads/2015/02/cropped-cropped-favicon-gradient.png
+  wired:
+    feed_url: https://www.wired.com/feed/rss
+    display_name: WIRED
+    summary: The latest from WIRED on technology, science, and culture.
+    profile_photo: https://www.wired.com/apple-touch-icon.png
+  hnrss_frontpage:
+    feed_url: https://hnrss.org/frontpage
+    display_name: "Hacker News: Front Page"
+    summary: Front-page stories from Hacker News, republished by hnrss.org.
+  engadget:
+    feed_url: https://www.engadget.com/rss.xml
+    display_name: Engadget
+    summary: Technology news, reviews, and buying advice.
+    profile_photo: https://www.engadget.com/favicon.ico
+  gizmodo:
+    feed_url: https://gizmodo.com/feed/
+    display_name: Gizmodo
+    summary: The future of science, technology, and culture.
+    profile_photo: https://gizmodo.com/apple-touch-icon.png
+  fast_company:
+    feed_url: https://www.fastcompany.com/latest/rss
+    display_name: Fast Company
+    summary: Innovation, leadership, and the future of business and design.
+    profile_photo: https://www.fastcompany.com/apple-touch-icon.png
+  hbr:
+    feed_url: https://feeds.hbr.org/harvardbusiness
+    display_name: HBR.org
+    summary: Practical insights, tools, and resources from leading business thought leaders.
+    profile_photo: https://hbr.org/favicon.ico
+  scientific_american:
+    feed_url: https://www.scientificamerican.com/platform/syndication/rss/
+    display_name: Scientific American
+    summary: Awe-inspiring advances in science and technology from Scientific American.
+  lifehacker:
+    feed_url: https://lifehacker.com/feed/
+    display_name: Lifehacker
+    summary: Tips, tricks, and downloads for getting things done.
 relay_subscription_bot: nyt_homepage
 follows:
   - '@icco@merveilles.town'
