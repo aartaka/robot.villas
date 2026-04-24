@@ -230,11 +230,6 @@ bots:
     display_name: NYT > Technology
     summary: Technology news from The New York Times.
     profile_photo: https://static01.nyt.com/images/icons/ios-default-homescreen-57x57.png
-  nyt_sports:
-    feed_url: https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml
-    display_name: NYT > Sports
-    summary: Sports news from The New York Times.
-    profile_photo: https://static01.nyt.com/images/icons/ios-default-homescreen-57x57.png
   nyt_science:
     feed_url: https://rss.nytimes.com/services/xml/rss/nyt/Science.xml
     display_name: NYT > Science
