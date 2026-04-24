@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="min-h-screen flex flex-col bg-base-100 font-body">
         <WebVitals analyticsPath="/analytics/robot-villas" />
         <header className="navbar bg-base-200 border-b border-base-300">
-          <div className="container mx-auto flex items-center">
+          <div className="container mx-auto flex flex-wrap items-center gap-y-1">
             <Link
               href="/"
               className="text-xl font-display font-bold tracking-tight hover:opacity-80 transition-opacity flex items-center gap-2"

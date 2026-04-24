@@ -66,7 +66,7 @@ export default async function BotProfilePage({ params, searchParams }: Props) {
         <span>&larr;</span> All bots
       </Link>
 
-      <div className="flex items-start gap-6 mb-6">
+      <div className="flex flex-col items-center gap-4 mb-6 sm:flex-row sm:items-start sm:gap-6">
         {bot.profile_photo ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
@@ -91,7 +91,7 @@ export default async function BotProfilePage({ params, searchParams }: Props) {
           <p className="mt-2 text-base-content/80">{bot.summary}</p>
           <p className="text-sm text-base-content/50 mt-2">
             Source:{" "}
-            <a href={bot.feed_url} className="link link-hover">
+            <a href={bot.feed_url} className="link link-hover break-all">
               {bot.feed_url}
             </a>
           </p>
@@ -101,7 +101,7 @@ export default async function BotProfilePage({ params, searchParams }: Props) {
                 Follow on Mastodon
               </button>
             </FollowButton>
-            <div className="stats shadow bg-base-200">
+            <div className="stats stats-vertical shadow bg-base-200 sm:stats-horizontal">
               <div className="stat px-4 py-2">
                 <div className="stat-title text-xs">Posts</div>
                 <div className="stat-value text-lg">
